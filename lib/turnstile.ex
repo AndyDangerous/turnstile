@@ -12,7 +12,7 @@ defmodule Turnstile do
   end
 
   def insert_coin(pid) do
-    GenServer.call(pid, :insert_coin)
+    GenServer.cast(pid, :insert_coin)
   end
 
   def push(pid) do
@@ -20,6 +20,7 @@ defmodule Turnstile do
   end
 
   # Server Callbacks
+
   def handle_call(:is_locked?, _from, :unlocked = state) do
     {:reply, false, state}
   end
@@ -27,9 +28,8 @@ defmodule Turnstile do
     {:reply, true, state}
   end
 
-  def handle_call(:insert_coin, _from, _state) do
-    {:reply, :ok, :unlocked}
-  end
+  def handle_cast(:insert_coin, _state),
+    do: {:noreply, :unlocked}
 
   def handle_call(:push, _from, state) do
     case state do
