@@ -29,4 +29,11 @@ defmodule TurnstileTest do
     assert :ok = Turnstile.push(turnstile)
     assert Turnstile.is_locked?(turnstile)
   end
+
+  test "more coins means more pushes", %{turnstile: turnstile}  do
+    Turnstile.insert_coin(turnstile)
+    Turnstile.insert_coin(turnstile)
+    Turnstile.push(turnstile)
+    assert :ok = Turnstile.push(turnstile)
+  end
 end
