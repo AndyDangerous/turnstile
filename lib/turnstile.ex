@@ -21,24 +21,23 @@ defmodule Turnstile do
 
   # Server Callbacks
 
-  def handle_call(:is_locked?, _from, :unlocked = state) do
-    {:reply, false, state}
-  end
-  def handle_call(:is_locked?, _from, :locked = state) do
-    {:reply, true, state}
-  end
+  def handle_call(:is_locked?, _from, :unlocked = state),
+    do: {:reply, false, state}
+
+  def handle_call(:is_locked?, _from, :locked = state),
+    do: {:reply, true, state}
 
   def handle_cast(:insert_coin, _state),
     do: {:noreply, :unlocked}
 
   def handle_call(:push, _from, state) do
     case state do
-      :unlocked -> lock!(:ok)
-      :locked -> lock!({:error, "it's locked"})
+      :unlocked -> lock(:ok)
+      :locked -> lock({:error, "it's locked"})
     end
   end
 
-  defp lock!(message) do
+  defp lock(message) do
     {:reply, message, :locked}
   end
 end
